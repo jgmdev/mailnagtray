@@ -31,4 +31,4 @@ sudo meson install -C build
 
 ## Screenshots
 
-![RGB2CMYK main](https://raw.githubusercontent.com/jgmdev/mailnagtray/master/screenshots/tray.png)
+![RGB2CMYK main](screenshots/tray.png)

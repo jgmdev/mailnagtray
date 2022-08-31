@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Mailnag Tray
+Comment=A tray icon applet for monitoring new emails
+Icon=mailnag
+Exec=mailnagtray
+Terminal=false
+Type=Application
+Categories=Network;Email;
+StartupNotify=false

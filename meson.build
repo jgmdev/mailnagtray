@@ -1,5 +1,7 @@
 project(
-  'mailnagtray', 'c', 'cpp',
+  'mailnagtray',
+  'c', 'cpp',
+  version : '0.1',
   license: 'GPL',
   default_options: ['c_std=c11', 'cpp_std=c++17']
 )
@@ -22,7 +24,6 @@ sources = files(
 # QT processed files
 qtprocessed = qt.preprocess(
   moc_headers: ['src/tray.h', 'src/emailsdialog.h'],
-  # ui_files: 'emails.ui',
   include_directories: includes
 )
 
@@ -32,6 +33,16 @@ exe = executable('mailnagtray',
   sources,
   include_directories: includes,
   dependencies: qt_deps,
-  install: true
+  install: true,
+  install_dir: 'bin'
+)
+
+# Installation files
+install_data('data/mailnagtray-startup.desktop',
+  rename : 'mailnagtray.desktop',
+  install_dir : '/etc/xdg/autostart'
+)
+install_data('data/mailnagtray.desktop',
+  install_dir : 'share/applications'
 )
 

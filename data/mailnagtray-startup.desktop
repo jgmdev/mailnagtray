@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Mailnag Tray
+Icon=mailnag
+Exec=mailnagtray
+Terminal=false
+Type=Application
+StartupNotify=false
+NotShowIn=KDE;GNOME;
