@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QDebug>
+#include <QThread>
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
@@ -21,12 +22,24 @@ int main(int argc, char *argv[])
         qDebug() << message;
         return 1;
     } else if (!MailnagDBus::running()) {
-        QString message = QObject::tr(
-            "Mailnag daemon not running."
-        );
-        QMessageBox::critical(nullptr, title, message);
-        qDebug() << message;
-        return 1;
+        int runs = 0;
+        bool running = true;
+        do {
+            QThread::sleep(1);
+            runs++;
+            if (runs == 10) {
+                running = false;
+                break;
+            }
+        } while(!MailnagDBus::running());
+        if (!running) {
+            QString message = QObject::tr(
+                "Mailnag daemon not running."
+            );
+            QMessageBox::critical(nullptr, title, message);
+            qDebug() << message;
+            return 1;
+        }
     }
 
     QApplication::setQuitOnLastWindowClosed(false);
