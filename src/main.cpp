@@ -15,13 +15,27 @@ int main(int argc, char *argv[])
     QString title = QObject::tr("Mailnag Tray");
 
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
-        QString message = QObject::tr(
-            "No system tray detected on this system."
-        );
-        QMessageBox::critical(nullptr, title, message);
-        qDebug() << message;
-        return 1;
-    } else if (!MailnagDBus::running()) {
+        int runs = 0;
+        bool tray_found = true;
+        do {
+            QThread::sleep(1);
+            runs++;
+            if (runs == 5) {
+                tray_found = false;
+                break;
+            }
+        } while(!QSystemTrayIcon::isSystemTrayAvailable());
+        if (!tray_found) {
+            QString message = QObject::tr(
+                "No system tray detected on this system."
+            );
+            QMessageBox::critical(nullptr, title, message);
+            qDebug() << message;
+            return 1;
+        }
+    }
+
+    if (!MailnagDBus::running()) {
         int runs = 0;
         bool running = true;
         do {
