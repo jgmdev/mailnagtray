@@ -2,14 +2,41 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QThread>
+#include <QString>
 
 #ifndef QT_NO_SYSTEMTRAYICON
 
 #include "tray.h"
 #include "mailnagdbus.h"
 
+void print_help() {
+    printf("Mailnag Tray - cross DE systray notifications implemented in QT.\n");
+    printf("\n");
+    printf("Usage: mailnagtray [OPTION]\n");
+    printf("\n");
+    printf("  -h, --help       Show command-line help.\n");
+    printf("  -s, --startup    Indicates the application is running at\n");
+    printf("                   startup to perform a sleep delay for proper\n");
+    printf("                   initialization.\n");
+}
+
 int main(int argc, char *argv[])
 {
+    if (argc > 1) {
+        for (int i=1; i<argc; i++) {
+            QString argument(argv[i]);
+            if (argument == "-h" || argument == "--help") {
+                print_help();
+                return 0;
+            } else if (argument == "-s" || argument == "--startup") {
+                QThread::sleep(3);
+            } else {
+                print_help();
+                return 0;
+            }
+        }
+    }
+
     QApplication app(argc, argv);
 
     QString title = QObject::tr("Mailnag Tray");
