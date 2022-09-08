@@ -1,7 +1,7 @@
 project(
   'mailnagtray',
   'c', 'cpp',
-  version : '0.2',
+  version : '0.3',
   license: 'GPL',
   default_options: ['c_std=c11', 'cpp_std=c++17']
 )
