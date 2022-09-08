@@ -19,7 +19,7 @@ class QSpinBox;
 class QTextEdit;
 QT_END_NAMESPACE
 
-class EmailsDialog;
+class EmailsWindow;
 
 class Tray : public QSystemTrayIcon
 {
@@ -27,6 +27,8 @@ class Tray : public QSystemTrayIcon
 
 public:
     Tray();
+
+private:
     void loadIcons();
     void setupSettings();
     void setupMenu();
@@ -35,21 +37,19 @@ public:
 
 private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
-    void onMailnagClicked();
-    void onOnlineAccountsClicked();
     void onSettingsClicked();
     void onMailTimer();
     void onMailsAdded(QDBusMessage message);
     void onMailsRemoved(QDBusMessage message);
 
 private:
-    EmailsDialog *_emailsDialog;
+    EmailsWindow *_emailsWindow;
 
     QIcon _mailUnreadIcon;
     QIcon _mailReadIcon;
 
     QMenu *_iconMenu;
-    QAction *_settingsAction;
+    QAction *_messagesAction;
     QAction *_mailNagConfigAction;
     QAction *_onlineAccountsAction;
     QAction *_quitAction;

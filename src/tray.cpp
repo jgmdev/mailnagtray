@@ -11,7 +11,8 @@
 #include <QFileInfo>
 #include <QMessageBox>
 
-#include "emailsdialog.h"
+#include "util.h"
+#include "emailswindow.h"
 
 Tray::Tray() : QSystemTrayIcon() {
     loadIcons();
@@ -46,24 +47,24 @@ void Tray::loadIcons() {
 }
 
 void Tray::setupSettings() {
-    _emailsDialog = new EmailsDialog;
+    _emailsWindow = new EmailsWindow;
 }
 
 void Tray::setupMenu() {
     _iconMenu = new QMenu();
 
-    _settingsAction = new QAction(QIcon::fromTheme("mail-unread"), tr("0 new messages"), this);
-    connect(_settingsAction, &QAction::triggered, this, &Tray::onSettingsClicked);
-    _iconMenu->addAction(_settingsAction);
+    _messagesAction = new QAction(QIcon::fromTheme("mail-unread"), tr("0 new messages"), this);
+    connect(_messagesAction, &QAction::triggered, this, &Tray::onSettingsClicked);
+    _iconMenu->addAction(_messagesAction);
 
     _iconMenu->addSeparator();
 
     _mailNagConfigAction = new QAction(QIcon::fromTheme("mailnag"), tr("&Mailnag Configuration"), this);
-    connect(_mailNagConfigAction, &QAction::triggered, this, &Tray::onMailnagClicked);
+    connect(_mailNagConfigAction, &QAction::triggered, &Util::openMailnagConfig);
     _iconMenu->addAction(_mailNagConfigAction);
 
     _onlineAccountsAction = new QAction(QIcon::fromTheme("org.gnome.Settings-online-accounts-symbolic"), tr("&Online Accounts"), this);
-    connect(_onlineAccountsAction, &QAction::triggered, this, &Tray::onOnlineAccountsClicked);
+    connect(_onlineAccountsAction, &QAction::triggered, &Util::openOnlineAccounts);
     _iconMenu->addAction(_onlineAccountsAction);
 
     _iconMenu->addSeparator();
@@ -82,10 +83,11 @@ void Tray::setupTimer() {
 }
 
 void Tray::registerMessages(QList<MailnagMessage> messages) {
-    _emailsDialog->clearMessages();
+    _emailsWindow->clearMessages();
     for (const MailnagMessage &message : messages) {
-        _emailsDialog->addMessage(message);
+        _emailsWindow->addMessage(message);
     }
+    _emailsWindow->updateMessages();
 
     if (messages.count() > 0)
         setIcon(_mailUnreadIcon);
@@ -97,7 +99,7 @@ void Tray::registerMessages(QList<MailnagMessage> messages) {
     );
 
     setToolTip(messagesText);
-    _settingsAction->setText(messagesText);
+    _messagesAction->setText(messagesText);
 }
 
 void Tray::iconActivated(QSystemTrayIcon::ActivationReason reason) {
@@ -111,40 +113,11 @@ void Tray::iconActivated(QSystemTrayIcon::ActivationReason reason) {
     }
 }
 
-void Tray::onMailnagClicked() {
-    if (QFileInfo::exists("/usr/bin/mailnag-config"))
-        QProcess::execute("mailnag-config", QStringList());
-    else
-        QMessageBox::critical(
-            nullptr,
-            tr("mailnag-config not found"),
-            tr(
-                "The Mailnag Configuration tool was not found.\n\n"
-                "Install Mailnag for this application to work properly."
-            )
-        );
-}
-
-void Tray::onOnlineAccountsClicked() {
-    if (QFileInfo::exists("/usr/bin/gnome-control-center"))
-        QProcess::execute("gnome-control-center", QStringList("online-accounts"));
-    else
-        QMessageBox::critical(
-            nullptr,
-            tr("gnome-control-center not found"),
-            tr(
-                "Gnome Control Center was not found.\n\n"
-                "Install gnome-control-center to easily setup email accounts "
-                "with missing or sketchy imap and pop access like gmail ones."
-            )
-        );
-}
-
 void Tray::onSettingsClicked() {
-    if (!_emailsDialog->isVisible())
-        _emailsDialog->showMaximized();
+    if (!_emailsWindow->isVisible())
+        _emailsWindow->showMaximized();
     else
-        _emailsDialog->hide();
+        _emailsWindow->hide();
 }
 
 void Tray::onMailTimer() {
@@ -155,7 +128,7 @@ void Tray::onMailTimer() {
 
         Tray::registerMessages(messages);
 
-        QList<EmailStats> stats = _emailsDialog->getStats();
+        QList<EmailStats> stats = _emailsWindow->getStats();
         for (const EmailStats &stat : stats) {
             showMessage(
                 tr("New E-mails"),

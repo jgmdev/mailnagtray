@@ -17,13 +17,15 @@ includes = include_directories('src')
 sources = files(
   'src/main.cpp',
   'src/tray.cpp',
-  'src/emailsdialog.cpp',
-  'src/mailnagdbus.cpp'
+  'src/emailswindow.cpp',
+  'src/listwidget.cpp',
+  'src/mailnagdbus.cpp',
+  'src/util.cpp',
 )
 
 # QT processed files
 qtprocessed = qt.preprocess(
-  moc_headers: ['src/tray.h', 'src/emailsdialog.h'],
+  moc_headers: ['src/tray.h', 'src/emailswindow.h', 'src/listwidget.h'],
   include_directories: includes
 )
 
