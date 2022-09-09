@@ -40,4 +40,6 @@ yay -S mailnagtray
 
 ## Screenshots
 
-![RGB2CMYK main](screenshots/tray.png)
+![tray icon](screenshots/tray.png)
+
+![messages log](screenshots/messages.png)
