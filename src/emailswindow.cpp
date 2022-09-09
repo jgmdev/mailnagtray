@@ -1,7 +1,7 @@
 #include "emailswindow.h"
 
 #include <QLabel>
-#include <QListWidget>
+#include <QListWidgetItem>
 #include <QVBoxLayout>
 #include <QTreeWidget>
 #include <QDate>

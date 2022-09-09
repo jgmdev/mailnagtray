@@ -10,6 +10,7 @@ support any desktop environment that supports a standard system tray.
 
 * [Mailnag](https://github.com/pulb/mailnag) - mail notifications
 * [QT6](https://www.qt.io/) - graphical interface and dbus ipc
+* [Libnotify](https://gitlab.gnome.org/GNOME/libnotify) - message notifications
 * [Meson](https://mesonbuild.com/) - build the application
 
 ## Compilation

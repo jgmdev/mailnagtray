@@ -14,7 +14,6 @@ struct EmailStats {
 };
 
 QT_BEGIN_NAMESPACE
-class QListWidget;
 class QVBoxLayout;
 class QTreeWidget;
 class QListWidgetItem;

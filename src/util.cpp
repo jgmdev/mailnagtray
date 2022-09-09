@@ -1,3 +1,6 @@
+// we include libnotify first otherwise causes compilation issues
+#include <libnotify/notify.h>
+
 #include "util.h"
 
 #include <QFileInfo>
@@ -33,4 +36,17 @@ void Util::openOnlineAccounts() {
                 "with missing or sketchy imap and pop access like gmail ones."
             )
         );
+}
+
+void Util::showNotification(
+    QString title, QString message, QString icon, int timeout
+) {
+    notify_init("mailnagtray");
+	NotifyNotification *notification = notify_notification_new(
+        title.toUtf8(), message.toUtf8(), icon.toUtf8()
+    );
+    notify_notification_set_timeout(notification, timeout * 1000);
+	notify_notification_show(notification, NULL);
+	g_object_unref(G_OBJECT(notification));
+	notify_uninit();
 }

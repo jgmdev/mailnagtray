@@ -1,15 +1,9 @@
 #include "tray.h"
 
-#include <QDialog>
 #include <QCoreApplication>
 #include <QDBusArgument>
-#include <QDebug>
-#include <QStringList>
 #include <QMenu>
-#include <QProcess>
 #include <QTimer>
-#include <QFileInfo>
-#include <QMessageBox>
 
 #include "util.h"
 #include "emailswindow.h"
@@ -130,10 +124,9 @@ void Tray::onMailTimer() {
 
         QList<EmailStats> stats = _emailsWindow->getStats();
         for (const EmailStats &stat : stats) {
-            showMessage(
+            Util::showNotification(
                 tr("New E-mails"),
-                stat.account + " (" + QString::number(stat.messages) + ")",
-                QSystemTrayIcon::MessageIcon::Information
+                stat.account + " (" + QString::number(stat.messages) + ")"
             );
         }
 
@@ -152,11 +145,11 @@ void Tray::onMailsAdded(QDBusMessage message) {
 
     int count = 0;
     for (const MailnagMessage &message : new_messages) {
-        showMessage(
+        Util::showNotification(
             tr("New e-mail") + " (" + message.account_name + ")"
             , message.sender_name + ":\n"
               + message.subject
-            , QSystemTrayIcon::MessageIcon::Information
+            , "mail-unread"
         );
 
         count++;
